@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HotChocolate;
+using HotChocolate.Data.MongoDb;
 using GraphQLAPI.Queries;
 using GraphQLAPI.Mutations;
 using MongoDB.Bson;
@@ -66,6 +67,17 @@ namespace GraphQLAPI
                 // Registers the projection convention of MongoDB
                 .AddMongoDbProjections();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("ClientPermission", policy =>
+                {
+                    policy.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .WithOrigins("http://localhost:3000")
+                        .AllowCredentials();
+                });
+            });
+
             services.AddControllers();
         }
 
@@ -80,6 +92,8 @@ namespace GraphQLAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("ClientPermission");
 
             app.UseAuthorization();
 

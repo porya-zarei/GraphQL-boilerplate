@@ -3,16 +3,18 @@ import type {AppProps} from "next/app";
 import Layout from "../layout/layout";
 import MainContextProvider from "../contexts/main-context/main-context";
 import {FC} from "react";
+import {ApolloProvider} from "@apollo/client";
 
-const MyApp: FC<AppProps> = ({
-    Component,
-    pageProps,
-}: AppProps) => {
+import {client} from "../graphql/client/client";
+
+const MyApp: FC<AppProps> = ({Component, pageProps}: AppProps) => {
     return (
         <MainContextProvider>
-            <Layout>
-                <Component {...pageProps} />
-            </Layout>
+            <ApolloProvider client={client}>
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
+            </ApolloProvider>
         </MainContextProvider>
     );
 };

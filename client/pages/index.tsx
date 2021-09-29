@@ -1,13 +1,46 @@
-import {FC, useEffect} from "react";
+import {FC, useState} from "react";
 import {GetStaticProps} from "next";
+import {ApolloError} from "@apollo/client";
+import {GET_Persons} from "../graphql/queries/getPersons";
+import {
+    GetPersonsData,
+    Person,
+} from "../types/Person";
+import {client} from "../graphql/client/client";
+import Link from 'next/link'
 
-interface IndexPageProps {}
+interface IndexPageProps {
+    persons: Array<Person>;
+    isError: boolean;
+    error: ApolloError | null;
+}
 
-const IndexPage: FC<IndexPageProps> = ({}) => {
-    useEffect(() => {}, []);
+const IndexPage: FC<IndexPageProps> = ({persons, isError}) => {
+    
+    if (isError) {
+        return <div>error ...</div>;
+    }
+
     return (
-        <div className="d-flex justify-content-center align-content-center align-items-center">
-            Hi Nextjs TypeScript | Landing Page
+        <div>
+            <div className="container">
+                <div className="row justify-content-center align-items-center p-3 m-0">
+                    {isError
+                        ? "Hi Nextjs TypeScript | Landing Page"
+                        : persons.map((person) => (
+                              <Link href={`/profile/${person.id}`}>
+                                  <a className="alert alert-info col-3">
+                                      {person?.name}
+                                  </a>
+                              </Link>
+                          ))}
+                </div>
+            </div>
+            <div>
+                <Link href="/profile/new">
+                    <a className="btn btn-info">Add new</a>
+                </Link>
+            </div>
         </div>
     );
 };
@@ -15,8 +48,28 @@ const IndexPage: FC<IndexPageProps> = ({}) => {
 export default IndexPage;
 
 export const getStaticProps: GetStaticProps = async (context) => {
+    let data: GetPersonsData = null,
+        error: null = null,
+        isError: boolean = false;
+
+    try {
+        const {data: d} = await client.query<GetPersonsData>({
+            query: GET_Persons,
+        });
+        data = d;
+    } catch (e) {
+        error = null;
+        isError = true;
+        console.log("error in create person", e);
+    }
+
+    const props: IndexPageProps = {
+        persons: data?.persons?.nodes || null,
+        error: error || null,
+        isError,
+    };
     return {
-        props: {},
+        props,
     };
 };
 
