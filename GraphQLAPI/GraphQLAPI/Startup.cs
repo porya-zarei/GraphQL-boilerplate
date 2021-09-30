@@ -20,6 +20,9 @@ using GraphQLAPI.Mutations;
 using MongoDB.Bson;
 using GraphQLAPI.Interfaces;
 using GraphQLAPI.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace GraphQLAPI
 {
@@ -54,11 +57,12 @@ namespace GraphQLAPI
             });
 
             services.AddSingleton<IPersonsService, PersonsService>();
+            services.AddSingleton<IAuthService, AuthService>();
 
             services
                 .AddGraphQLServer()
-                .AddQueryType<PersonsQuery>()
-                .AddMutationType<PersonsMutation>()
+                .AddQueryType<AllQueries>()
+                .AddMutationType<AllMutations>()
                 .EnableRelaySupport()
                 // Registers the filter convention of MongoDB
                 .AddMongoDbFiltering()
@@ -78,6 +82,21 @@ namespace GraphQLAPI
                 });
             });
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    };
+                });
+
             services.AddControllers();
         }
 
@@ -95,7 +114,13 @@ namespace GraphQLAPI
 
             app.UseCors("ClientPermission");
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseWebSockets(new WebSocketOptions()
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120),
+            });
 
             app.UseEndpoints(endpoints =>
             {

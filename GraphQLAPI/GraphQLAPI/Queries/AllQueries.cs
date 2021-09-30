@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace GraphQLAPI.Queries
 {
-    public class PersonsQuery
+    public class AllQueries
     {
         private readonly IPersonsService personsService;
 
-        public PersonsQuery([Service] IMongoCollection<Person> _persons)
+        public AllQueries([Service] IMongoCollection<Person> _persons)
         {
             personsService = new PersonsService(_persons);
         }

@@ -7,9 +7,12 @@ export interface Address {
 export interface Person {
     __typename?: string;
     id: string;
-    mainAddress: Address;
-    addresses: Address[];
-    name: string;
+    personID: string;
+    firstName: string;
+    lastName: string;
+    email?: string;
+    password?: string;
+    address: Address;
 }
 
 export interface GetPersonsData {
@@ -44,32 +47,34 @@ export interface MutationCreatePersonData {
     };
 }
 
-`{
-    "data": {
-        "createPerson": {
-            "person": {
-                "id": "UGVyc29uCmdmM2Y3ZDVjYjMzM2Y0ZTM1ODEyZjNmYmJlN2ZlNTcxZQ==",
-                "name": "Albert Einstein 4",
-                "mainAddress": {
-                    "city": "Ulm",
-                    "street": "_",
-                    "__typename": "Address"
-                },
-                "addresses": [
-                    {
-                        "city": "Ulm",
-                        "street": "_",
-                        "__typename": "Address"
-                    },
-                    {
-                        "city": "NewYork",
-                        "street": "_",
-                        "__typename": "Address"
-                    }
-                ],
-                "__typename": "Person"
-            },
-            "__typename": "CreatePersonPayload"
-        }
-    }
-}`;
+export interface RegisterTokenData {
+    __typename?: string;
+    registerPerson: {
+        __typename?: string;
+        token: string;
+    };
+}
+
+export interface LoginTokenData {
+    __typename?: string;
+    loginPerson: {
+        __typename?: string;
+        token: string;
+    };
+}
+
+export interface RegisterData {
+    __typename?: string;
+    firstName: string;
+    lastName: string;
+    email?: string;
+    password?: string;
+    address: Address;
+}
+
+export interface LoginData {
+    __typename?: string;
+    email?: string;
+    password?: string;
+}
+

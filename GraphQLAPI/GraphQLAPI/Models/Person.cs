@@ -1,6 +1,9 @@
 ﻿using HotChocolate.Types.Relay;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,12 +15,17 @@ namespace GraphQLAPI.Models
         NodeResolver = nameof(PersonNodeResolver.ResolveAsync))]
     public class Person
     {
+        [BsonId]
         public Guid Id { get; init; }
 
-        public string Name { get; init; }
+        public Guid PersonID { get; init; }
 
-        public IReadOnlyList<Address> Addresses { get; init; }
+        public string FirstName { get; init; }
+        public string LastName { get; init; }
 
-        public Address MainAddress { get; init; }
+        public string Email { get; init; }
+        public string Password { get; init; }
+
+        public Address Address { get; init; }
     }
 }

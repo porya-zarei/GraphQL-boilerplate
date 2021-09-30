@@ -135,14 +135,16 @@ const ProfilesPage: FC<ProfilesPageProps> = ({
         <div className="container">
             <div className="card bg-secondary">
                 <div className="card-header alert alert-dark text-white">
-                    {person.id}
+                    {person.personID}
                 </div>
                 <div className="card-body">
-                    <div className="alert alert-light m-1">{person?.name}</div>
                     <div className="alert alert-light m-1">
-                        {person?.mainAddress?.city +
+                        {person?.firstName + " " + person?.lastName}
+                    </div>
+                    <div className="alert alert-light m-1">
+                        {person?.address?.city +
                             " | " +
-                            person?.mainAddress?.street}
+                            person?.address?.street}
                     </div>
                 </div>
             </div>

@@ -2,6 +2,7 @@
 using GraphQLAPI.Models;
 using HotChocolate;
 using HotChocolate.Data;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -29,13 +30,16 @@ namespace GraphQLAPI.Services
             return persons.Find(x => x.Id == id).AsExecutable();
         }
 
-        public async Task<CreatePersonPayload> CreatePersonAsync(CreatePersonInput input)
+        public async Task<CreatePersonPayload> CreatePersonAsync(CreatePersonInput newPerson)
         {
             var person = new Person()
             {
-                Name = input.Name,
-                Addresses = input.Addresses,
-                MainAddress = input.MainAddress
+                PersonID = Guid.NewGuid(),
+                FirstName = newPerson.FirstName,
+                LastName = newPerson.LastName,
+                Email = newPerson.Email,
+                Password = newPerson.Password,
+                Address = newPerson.Address
             };
 
             await persons.InsertOneAsync(person);

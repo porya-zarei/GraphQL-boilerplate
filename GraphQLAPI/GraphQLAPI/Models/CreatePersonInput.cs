@@ -7,8 +7,10 @@ namespace GraphQLAPI.Models
 {
     public record CreatePersonInput
     (
-        string Name,
-        IReadOnlyList<Address> Addresses,
-        Address MainAddress
+        string FirstName,
+        string LastName,
+        string Email,
+        string Password,
+        Address Address
     );
 }

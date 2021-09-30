@@ -30,7 +30,7 @@ const IndexPage: FC<IndexPageProps> = ({persons, isError}) => {
                         : persons.map((person) => (
                               <Link href={`/profile/${person.id}`}>
                                   <a className="alert alert-info col-3">
-                                      {person?.name}
+                                      {person?.firstName || person?.lastName}
                                   </a>
                               </Link>
                           ))}

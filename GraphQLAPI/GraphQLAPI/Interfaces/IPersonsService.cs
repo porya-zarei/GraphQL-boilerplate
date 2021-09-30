@@ -10,7 +10,9 @@ namespace GraphQLAPI.Interfaces
     public interface IPersonsService
     {
         Task<CreatePersonPayload> CreatePersonAsync(CreatePersonInput input);
+
         IExecutable<Person> GetPersonById(Guid id);
+
         IExecutable<Person> GetPersons();
     }
 }
