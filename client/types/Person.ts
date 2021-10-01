@@ -28,22 +28,42 @@ export interface GetPersonData {
     personById: Person;
 }
 
-export interface PersonInput {
+export interface PersonRegisterData {
     __typename?: string;
-    mainAddress: Address;
-    addresses: Address[];
-    name: string;
+    address: Address;
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
 }
 
-export interface MutationCreatePersonInput {
-    input: PersonInput;
+export interface PersonLoginData {
+    __typename?: string;
+    email: string;
+    password: string;
 }
 
-export interface MutationCreatePersonData {
+export interface MutationRegisterPersonData {
+    registerData: PersonRegisterData;
+}
+
+export interface MutationLoginPersonData {
+    loginData: PersonLoginData;
+}
+
+export interface MutationRegisterPersonResult {
     __typename?: string;
-    createPerson: {
+    registerPerson: {
         __typename?: string;
-        person: Person;
+        token: string;
+    };
+}
+
+export interface MutationLoginPersonResult {
+    __typename?: string;
+    loginPerson: {
+        __typename?: string;
+        token: string;
     };
 }
 
@@ -62,19 +82,3 @@ export interface LoginTokenData {
         token: string;
     };
 }
-
-export interface RegisterData {
-    __typename?: string;
-    firstName: string;
-    lastName: string;
-    email?: string;
-    password?: string;
-    address: Address;
-}
-
-export interface LoginData {
-    __typename?: string;
-    email?: string;
-    password?: string;
-}
-

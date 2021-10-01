@@ -1,25 +1,43 @@
-import {createContext, Context, FC, useState, ReactElement, SetStateAction, Dispatch, ReactNode} from "react";
+import {type} from "os";
+import {
+    createContext,
+    Context,
+    FC,
+    useState,
+    ReactNode,
+    useCallback,
+} from "react";
 
 interface MainContextProviderProps {
     children: ReactNode;
 }
 
-type MainContextType = {
-    state: string;
-    setState: Dispatch<SetStateAction<string>>;
-}
+type ChangeUserTokenFunction = (data: string, type?: string) => void;
 
-const MainContext: Context<object> = createContext({});
+export type MainContextType = {
+    userToken?: string;
+    changeUserToken?: ChangeUserTokenFunction;
+};
+
+export const MainContext: Context<MainContextType> = createContext({});
 
 const MainContextProvider: FC<MainContextProviderProps> = ({children}) => {
+    const [userToken, setUserToken] = useState<string>("");
 
-    const [state, setState] = useState<string>();
-    
+    const changeUserToken = useCallback<ChangeUserTokenFunction>(
+        (data, type = "set") => {
+            if (type === "set") {
+                setUserToken(data);
+            }
+        },
+        [],
+    );
+
     const context: MainContextType = {
-        state,
-        setState,
+        userToken,
+        changeUserToken,
     };
-    
+
     return (
         <MainContext.Provider value={context}>{children}</MainContext.Provider>
     );

@@ -6,12 +6,10 @@ export const GET_Persons: DocumentNode = gql`
         persons(first: 50) {
             nodes {
                 id
-                name
-                addresses {
-                    city
-                    street
-                }
-                mainAddress {
+                personID
+                firstName
+                lastName
+                address {
                     city
                     street
                 }
@@ -24,12 +22,10 @@ export const GET_PersonById: DocumentNode = gql`
     query personById($id: ID!) {
         personById(id: $id) {
             id
-            name
-            addresses {
-                city
-                street
-            }
-            mainAddress {
+            personID
+            firstName
+            lastName
+            address {
                 city
                 street
             }

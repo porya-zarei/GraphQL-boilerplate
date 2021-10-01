@@ -5,6 +5,7 @@ using HotChocolate;
 using HotChocolate.Data;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
+using Microsoft.AspNetCore.Authorization;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace GraphQLAPI.Queries
             return personsService.GetPersons();
         }
 
+        [Authorize]
         [UseFirstOrDefault]
         public IExecutable<Person> GetPersonById([ID] Guid id)
         {
