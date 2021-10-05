@@ -5,7 +5,8 @@ using HotChocolate;
 using HotChocolate.Data;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
-using Microsoft.AspNetCore.Authorization;
+using HotChocolate.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -34,8 +35,9 @@ namespace GraphQLAPI.Queries
 
         [Authorize]
         [UseFirstOrDefault]
-        public IExecutable<Person> GetPersonById([ID] Guid id)
+        public IExecutable<Person> GetPersonById([ID] Guid id, [Service] IHttpContextAccessor contextAccessor)
         {
+            var userId = new Guid(contextAccessor.HttpContext.User.FindFirst("PersonID").Value);
             return personsService.GetPersonById(id);
         }
     }

@@ -29,7 +29,7 @@ namespace GraphQLAPI.Services
             var tokenData = new Dictionary<string, string>()
             {
                 {"PersonID",person.Id.ToString() },
-                {"FullName",person.FirstName + " "+person.LastName }
+                {"FullName",person.FirstName + " " + person.LastName }
             };
             var token = JwtHelper.GetToken(tokenData, configoration);
             return token;

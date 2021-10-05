@@ -23,6 +23,7 @@ using GraphQLAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using HotChocolate.AspNetCore;
 
 namespace GraphQLAPI
 {
@@ -59,8 +60,11 @@ namespace GraphQLAPI
             services.AddSingleton<IPersonsService, PersonsService>();
             services.AddSingleton<IAuthService, AuthService>();
 
+            services.AddHttpContextAccessor();
+
             services
                 .AddGraphQLServer()
+                .AddAuthorization()
                 .AddQueryType<AllQueries>()
                 .AddMutationType<AllMutations>()
                 .EnableRelaySupport()
@@ -100,6 +104,21 @@ namespace GraphQLAPI
             services.AddControllers();
         }
 
+        //private static OnCreateRequestAsync AuthenticationInterceptor()
+        //{
+        //    return (context, builder, token) =>
+        //    {
+        //        if (context.GetUser().Identity.IsAuthenticated)
+        //        {
+        //            builder.SetProperty("currentUser",
+        //                new CurrentUser(Guid.Parse(context.User.FindFirstValue(ClaimTypes.NameIdentifier)),
+        //                    context.User.Claims.Select(x => $"{x.Type} : {x.Value}").ToList()));
+        //        }
+
+        //        return Task.CompletedTask;
+        //    };
+        //}
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -115,6 +134,7 @@ namespace GraphQLAPI
             app.UseCors("ClientPermission");
 
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseWebSockets(new WebSocketOptions()

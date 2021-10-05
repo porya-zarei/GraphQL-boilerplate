@@ -1,30 +1,25 @@
-import {useMutation} from "@apollo/client";
 import {GetServerSideProps} from "next";
-import {FC, FormEventHandler, useRef, useState} from "react";
+import {FC} from "react";
 import {client} from "../../graphql/client/client";
-import {CREATE_Persons} from "../../graphql/mutations/createPerson";
 import {GET_PersonById} from "../../graphql/queries/getPersons";
 import {
     GetPersonData,
-    MutationCreatePersonData,
-    MutationCreatePersonInput,
     Person,
-    PersonInput,
 } from "../../types/Person";
 import Link from "next/link";
 interface ProfilesPageProps {
     id: string | string[];
     person: Person;
-    isErroe: boolean;
+    isError: boolean;
 }
 
 const ProfilesPage: FC<ProfilesPageProps> = ({
     id,
     person,
-    isErroe,
+    isError,
 }) => {
 
-    if (isErroe) {
+    if (isError) {
         return <div className="container">error | {id}</div>;
     }
 
@@ -61,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             const props: ProfilesPageProps = {
                 id: id,
                 person: null,
-                isErroe: true,
+                isError: true,
             };
             return {props};
         }
@@ -77,7 +72,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         const props: ProfilesPageProps = {
             id: id,
             person: data.personById,
-            isErroe: false,
+            isError: false,
         };
 
         return {
@@ -87,7 +82,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         const props: ProfilesPageProps = {
             id: null,
             person: null,
-            isErroe: true,
+            isError: true,
         };
         return {
             props,

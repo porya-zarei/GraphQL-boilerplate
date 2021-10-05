@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="HotChocolate.AspNetCore" Version="11.3.8" />
+    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="11.3.8" />
     <PackageReference Include="HotChocolate.Data.MongoDb" Version="11.3.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.10" />
     <PackageReference Include="MongoDB.Driver" Version="2.13.1" />

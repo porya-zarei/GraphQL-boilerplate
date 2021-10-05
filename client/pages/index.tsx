@@ -30,7 +30,9 @@ const IndexPage: FC<IndexPageProps> = ({persons, isError}) => {
                     {isError
                         ? "Hi Nextjs TypeScript | Landing Page"
                         : persons.map((person) => (
-                              <Link href={`/profile/${person.id}`}>
+                              <Link
+                                  key={person.personID}
+                                  href={`/profile/${person.id}`}>
                                   <a className="alert alert-info col-3">
                                       {person?.firstName +
                                           " | " +
@@ -40,9 +42,7 @@ const IndexPage: FC<IndexPageProps> = ({persons, isError}) => {
                           ))}
                 </div>
             </div>
-            <div className="container text-break">
-               Token : {userToken}
-            </div>
+            <div className="container text-break">Token : {userToken}</div>
             <div className="container w-100">
                 <div className="m-2">
                     <Link href="/auth/login/">
