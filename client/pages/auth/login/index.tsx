@@ -49,7 +49,6 @@ const LoginPage: FC<LoginPageProps> = () => {
             console.log("token in register person => ", token);
 
             changeUserToken(token);
-
             router.replace("/");
             
         } catch (error) {

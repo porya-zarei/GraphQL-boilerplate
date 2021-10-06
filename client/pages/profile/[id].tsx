@@ -2,23 +2,16 @@ import {GetServerSideProps} from "next";
 import {FC} from "react";
 import {client} from "../../graphql/client/client";
 import {GET_PersonById} from "../../graphql/queries/getPersons";
-import {
-    GetPersonData,
-    Person,
-} from "../../types/Person";
+import {GetPersonData, Person} from "../../types/Person";
 import Link from "next/link";
+import Cookies from "cookies";
 interface ProfilesPageProps {
     id: string | string[];
     person: Person;
     isError: boolean;
 }
 
-const ProfilesPage: FC<ProfilesPageProps> = ({
-    id,
-    person,
-    isError,
-}) => {
-
+const ProfilesPage: FC<ProfilesPageProps> = ({id, person, isError}) => {
     if (isError) {
         return <div className="container">error | {id}</div>;
     }
@@ -49,8 +42,13 @@ const ProfilesPage: FC<ProfilesPageProps> = ({
 
 export default ProfilesPage;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const id = context.query.id;
+export const getServerSideProps: GetServerSideProps = async ({
+    req,
+    res,
+    query,
+}) => {
+    const id = query.id;
+
     try {
         if (!id || id.length < 56) {
             const props: ProfilesPageProps = {
@@ -62,10 +60,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
         console.log("in profiles => ", id);
 
+        const cookies = new Cookies(req, res);
+        const token = cookies.get("token");
+        
         const {data} = await client.query<GetPersonData>({
             query: GET_PersonById,
             variables: {
                 id: id,
+            },
+            context: {
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
             },
         });
 

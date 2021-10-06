@@ -9,13 +9,13 @@ import {client} from "../graphql/client/client";
 
 const MyApp: FC<AppProps> = ({Component, pageProps}: AppProps) => {
     return (
-        <MainContextProvider>
-            <ApolloProvider client={client}>
+        <ApolloProvider client={client}>
+            <MainContextProvider>
                 <Layout>
                     <Component {...pageProps} />
                 </Layout>
-            </ApolloProvider>
-        </MainContextProvider>
+            </MainContextProvider>
+        </ApolloProvider>
     );
 };
 

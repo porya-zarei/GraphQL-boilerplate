@@ -2,8 +2,10 @@
 using GraphQLAPI.Interfaces;
 using GraphQLAPI.Models;
 using GraphQLAPI.Services;
+using GraphQLAPI.Utils;
 using HotChocolate;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using System;
@@ -24,14 +26,39 @@ namespace GraphQLAPI.Mutations
             personsService = new PersonsService(_persons);
         }
 
-        public async Task<LoginPersonPayload> LoginPerson(LoginPerson loginData)
+        public async Task<LoginPersonPayload> LoginPerson(LoginPerson loginData, [Service] IHttpContextAccessor contextAccessor)
         {
-            return new LoginPersonPayload(await authService.LoginPerson(loginData));
+            var token = await authService.LoginPerson(loginData);
+            var cookie = new CookieOptions
+            {
+                Expires = DateTime.Now.AddHours(3),
+                HttpOnly = true,
+                Secure = false,
+                SameSite = SameSiteMode.None,
+                Path = "/",
+                Domain = APIConfigs.ClientHost,
+                IsEssential = true
+            };
+            contextAccessor.HttpContext.Response.Cookies.Append("token", token, cookie);
+            return new LoginPersonPayload(token);
         }
 
-        public async Task<LoginPersonPayload> RegisterPerson(CreatePersonInput registerData)
+        public async Task<LoginPersonPayload> RegisterPerson(CreatePersonInput registerData, [Service] IHttpContextAccessor contextAccessor)
         {
-            return new LoginPersonPayload(await authService.RegisterPerson(registerData));
+            var token = await authService.RegisterPerson(registerData);
+            var cookie = new CookieOptions
+            {
+                Expires = DateTime.Now.AddHours(3),
+                HttpOnly = true,
+                Secure = false,
+                SameSite = SameSiteMode.None,
+                Path = "/",
+                Domain = APIConfigs.ClientHost,
+                IsEssential = true
+            };
+            contextAccessor.HttpContext.Response.Cookies.Append("token", token, cookie);
+
+            return new LoginPersonPayload(token);
         }
 
         [Authorize]
